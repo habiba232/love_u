@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome ❤️</title>
+<style>
+body{
+  background: linear-gradient(#fbc2eb,#a6c1ee);
+  font-family: Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.card{
+  background:#fff;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  width:300px;
+}
+input,button{
+  padding:12px;
+  width:100%;
+  margin-top:10px;
+  border-radius:25px;
+  border:1px solid #ddd;
+}
+button{
+  background:#ff5fa2;
+  color:#fff;
+  border:none;
+  font-size:16px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Welcome malokty</h2>
+  <p>To enter, type the first date we spoke❤️</p>
+
+  <input type="text" id="pass" placeholder="Enter date">
+
+  <p id="errorMsg"
+     style="display:none; color:#ff4d6d; text-align:center; margin:8px 0;">
+  </p>
+
+  <!-- بوكس الـ Hint -->
+  <div id="hintBox"
+       style="display:none; color:#000; background:#ffd6e0;
+              padding:8px; border-radius:8px;
+              text-align:center; margin-top:8px;">
+    💡 Hint: تاريخ اول مرة اتكلمنا
+  </div>
+
+  <button onclick="go()">Unlock ❤️</button>
+</div>
+
+<script>
+const messages = [
+  "غلط يما",
+  "ركزي شويه",
+  "لا كدا قلة ادب",
+  "هنهزر",
+  "لا لا مش هينفع كدا"
+];
+
+let attempts = 0;
+
+function go(){
+  const pass = document.getElementById('pass').value;
+  const errorMsg = document.getElementById('errorMsg');
+  const hintBox = document.getElementById('hintBox');
+
+  console.log("Attempts:", attempts); // للتأكد إن العداد بيزيد
+
+  if(pass === '15/3'){
+    window.location = 'home.html';
+  } else {
+    attempts++;
+
+    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+    errorMsg.textContent = randomMsg;
+    errorMsg.style.display = 'block';
+
+    if(attempts >= 2){
+      hintBox.style.display = 'block';
+    }
+  }
+}
+</script>
+</body>
+
+
+</html>
