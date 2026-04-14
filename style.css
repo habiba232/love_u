@@ -134,6 +134,7 @@ body {
   box-shadow:
     0 10px 30px rgba(255, 95, 158, 0.32),
     0 0 20px rgba(255, 126, 182, 0.18);
+  backdrop-filter: blur(6px);
   opacity: 0;
   visibility: hidden;
   transition:
@@ -223,8 +224,8 @@ body {
     left: 50%;
     right: auto;
     top: auto;
-    bottom: calc(38vh + 42px);
-    transform: translateX(-50%) translateY(16px);
+    bottom: 220px;
+    transform: translateX(-50%) translateY(20px);
     padding: 12px 20px;
     font-size: 14px;
     white-space: nowrap;
@@ -250,7 +251,7 @@ body {
   }
 
   .next-button {
-    bottom: calc(36vh + 34px);
+    bottom: 205px;
     font-size: 13px;
     padding: 11px 18px;
   }
