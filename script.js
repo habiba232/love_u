@@ -162,6 +162,31 @@ function heartPoint(t, scale = 1) {
   };
 }
 
+function placeActionButton() {
+  const isMobile = window.innerWidth <= 767;
+
+  if (!terminal.classList.contains("show")) return;
+
+  if (isMobile) {
+    const terminalRect = terminal.getBoundingClientRect();
+    const buttonRect = actionButton.getBoundingClientRect();
+    const buttonWidth = buttonRect.width || 150;
+
+    const left = (window.innerWidth - buttonWidth) / 2;
+    const top = Math.max(16, terminalRect.top - 64);
+
+    actionButton.style.left = `${left}px`;
+    actionButton.style.top = `${top}px`;
+    actionButton.style.right = "auto";
+    actionButton.style.bottom = "auto";
+  } else {
+    actionButton.style.left = "auto";
+    actionButton.style.top = "70%";
+    actionButton.style.right = "12%";
+    actionButton.style.bottom = "auto";
+  }
+}
+
 function createGalaxyData() {
   const positions = new Float32Array(parameters.count * 3);
   const colors = new Float32Array(parameters.count * 3);
@@ -302,6 +327,8 @@ window.addEventListener("resize", () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   rebuildSceneForResize();
+
+  setTimeout(placeActionButton, 50);
 });
 
 function updateTyping(deltaTime) {
@@ -315,6 +342,7 @@ function updateTyping(deltaTime) {
     if (typingLineIndex >= terminalLines.length) {
       typingFinished = true;
       actionButton.classList.add("show");
+      placeActionButton();
       break;
     }
 
@@ -420,6 +448,7 @@ function tick() {
 
     if (uiProgress > 0.02) {
       terminal.classList.add("show");
+      placeActionButton();
     }
 
     if (uiProgress > 0.15 && !typingStarted) {
