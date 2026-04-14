@@ -117,10 +117,7 @@ body {
 }
 
 .next-button {
-  position: absolute;
-  right: 12%;
-  top: 70%;
-  transform: translateY(20px);
+  position: fixed;
   pointer-events: auto;
   text-decoration: none;
   color: #fff;
@@ -142,12 +139,12 @@ body {
     transform 0.5s ease,
     visibility 0.5s ease,
     box-shadow 0.3s ease;
+  z-index: 30;
 }
 
 .next-button.show {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
 }
 
 .next-button:hover {
@@ -176,10 +173,8 @@ body {
   }
 
   .next-button {
-    right: 8%;
-    top: 72%;
-    padding: 12px 22px;
     font-size: 15px;
+    padding: 12px 22px;
   }
 }
 
@@ -221,18 +216,9 @@ body {
   }
 
   .next-button {
-    left: 50%;
-    right: auto;
-    top: auto;
-    bottom: 220px;
-    transform: translateX(-50%) translateY(20px);
-    padding: 12px 20px;
     font-size: 14px;
+    padding: 12px 20px;
     white-space: nowrap;
-  }
-
-  .next-button.show {
-    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -251,7 +237,6 @@ body {
   }
 
   .next-button {
-    bottom: 205px;
     font-size: 13px;
     padding: 11px 18px;
   }
