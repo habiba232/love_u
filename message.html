@@ -1,59 +1,97 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Message</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<style>
-body {
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:Arial;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: radial-gradient(circle at top, #151122 0%, #08060d 55%, #000 100%);
+      color: white;
+      font-family: Arial, sans-serif;
+    }
 
-.card {
-  width:90%;
-  max-width:500px;
-  max-height:80vh;
-  background:#111;
-  padding:20px;
-  border-radius:20px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
+    body {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
 
-h1 {
-  text-align:center;
-  margin-bottom:10px;
-  color:#ff7eb6;
-}
+    .page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
 
-.text {
-  overflow-y:auto;
-  flex:1;
-  line-height:1.8;
-}
-</style>
+    .card {
+      max-width: 760px;
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 32px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      text-align: right;
+    }
 
+    h1 {
+      font-size: 34px;
+      margin-bottom: 18px;
+      color: #ff9fc8;
+      text-align: center;
+    }
+
+    p {
+      font-size: 20px;
+      line-height: 2;
+      color: rgba(255,255,255,0.88);
+    }
+
+    @media (max-width: 767px) {
+      .page {
+        padding: 14px;
+      }
+
+      .card {
+        padding: 20px 16px;
+        border-radius: 18px;
+      }
+
+      h1 {
+        font-size: 26px;
+        margin-bottom: 14px;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.95;
+      }
+    }
+  </style>
 </head>
-
 <body>
-
-<div class="card">
-  <h1>من اجلك</h1>
-  <div class="text">
-    بصي يا حبيبة انا عارف اني اديتك وعد...
-    <br><br>
-    (حط النص كله هنا وهيعمل scroll تلقائي)
+  <div class="page">
+    <div class="card">
+      <h1>من أجلك</h1>
+      <p>
+        بصي يا حبيبتي أنا عارف إني اديتك وعد، وأنا مش هنا عشان أرجع في كلامي،
+        بس هنا عشان أقولك إن آه يمكن متكلمتش معاكي كتير ولا أعرف عنك حاجات،
+        لكن من يوم ما شوفتك وأنا حاسس بحاجة جوايا ناحيتك، ومش عارف أتغاضى عنها
+        أو أنساها. أنا مش بقول إني عايز أضغط عليكي أو أرجع كل حاجة زي الأول،
+        بس على الأقل نفسي يبقى بينا تواصل، حتى لو بسيط، حتى لو كل شوية.
+        أنا عارف إني ظهرتلك فجأة ومن غير مقدمات، وعارف إن ده يمكن كان غريب
+        عليا وعليكي، لكن اللي حسيته ناحيتك كان حقيقي، ولسه حقيقي.
+      </p>
+    </div>
   </div>
-</div>
-
 </body>
 </html>
