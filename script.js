@@ -19,11 +19,11 @@ function getResponsiveConfig() {
     particleSize: isMobile ? 0.028 : 0.022,
     heartScale: isMobile ? 0.075 : 0.088,
     heartDepth: isMobile ? 0.05 : 0.08,
-    cameraY: isMobile ? 0.12 : 0.4,
+    cameraY: isMobile ? 0.2 : 0.4, // رفعت القلب شوية
     cameraZ: isMobile ? 6.6 : 7.2,
     finalCameraZ: isMobile ? 5.9 : 5.7,
-    finalCameraY: isMobile ? 0.1 : 0.18,
-    heartMoveX: isMobile ? 0.95 : 2.15,
+    finalCameraY: isMobile ? 0.15 : 0.18,
+    heartMoveX: isMobile ? 0 : 2.15, // 👈 في النص
     orbitRadius: isMobile ? 6.2 : 7.0,
   };
 }
@@ -91,7 +91,7 @@ const timings = {
 
 let morphFinished = false;
 
-// -------------------- UI --------------------
+// UI
 const overlay = document.createElement("div");
 overlay.className = "overlay-ui";
 
@@ -133,7 +133,6 @@ let typingCharIndex = 0;
 let typingAccumulator = 0;
 const typingSpeed = 12;
 
-// -------------------- Helpers --------------------
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
@@ -156,35 +155,7 @@ function heartPoint(t, scale = 1) {
     2 * Math.cos(3 * t) -
     Math.cos(4 * t);
 
-  return {
-    x: x * scale,
-    y: y * scale,
-  };
-}
-
-function placeActionButton() {
-  const isMobile = window.innerWidth <= 767;
-
-  if (!terminal.classList.contains("show")) return;
-
-  if (isMobile) {
-    const terminalRect = terminal.getBoundingClientRect();
-    const buttonRect = actionButton.getBoundingClientRect();
-    const buttonWidth = buttonRect.width || 150;
-
-    const left = (window.innerWidth - buttonWidth) / 2;
-    const top = Math.max(16, terminalRect.top - 64);
-
-    actionButton.style.left = `${left}px`;
-    actionButton.style.top = `${top}px`;
-    actionButton.style.right = "auto";
-    actionButton.style.bottom = "auto";
-  } else {
-    actionButton.style.left = "auto";
-    actionButton.style.top = "70%";
-    actionButton.style.right = "12%";
-    actionButton.style.bottom = "auto";
-  }
+  return { x: x * scale, y: y * scale };
 }
 
 function createGalaxyData() {
@@ -196,34 +167,14 @@ function createGalaxyData() {
 
   for (let i = 0; i < parameters.count; i++) {
     const i3 = i * 3;
-
     const radius = Math.random() * parameters.radius;
     const branchAngle =
       ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
     const spinAngle = radius * parameters.spin;
 
-    const randomX =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1) *
-      parameters.randomness *
-      radius;
-
-    const randomY =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1) *
-      parameters.randomness *
-      radius *
-      0.22;
-
-    const randomZ =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1) *
-      parameters.randomness *
-      radius;
-
-    positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-    positions[i3 + 1] = randomY;
-    positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+    positions[i3] = Math.cos(branchAngle + spinAngle) * radius;
+    positions[i3 + 1] = 0;
+    positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius;
 
     const mixedColor = colorInside.clone();
     mixedColor.lerp(colorOutside, radius / parameters.radius);
@@ -243,20 +194,12 @@ function createHeartData() {
 
   for (let i = 0; i < parameters.count; i++) {
     const i3 = i * 3;
-
     const t = (i / parameters.count) * Math.PI * 2;
     const p = heartPoint(t, parameters.heartScale);
 
-    const edgeSpread = (Math.random() - 0.5) * 0.022;
-    const depth = (Math.random() - 0.5) * parameters.heartDepth;
-
-    positions[i3] =
-      p.x + Math.cos(t) * edgeSpread + (Math.random() - 0.5) * 0.008;
-
-    positions[i3 + 1] =
-      p.y + Math.sin(t) * edgeSpread + (Math.random() - 0.5) * 0.008;
-
-    positions[i3 + 2] = depth;
+    positions[i3] = p.x;
+    positions[i3 + 1] = p.y;
+    positions[i3 + 2] = 0;
 
     colors[i3] = heartColor.r;
     colors[i3 + 1] = heartColor.g;
@@ -276,22 +219,12 @@ function initParticles() {
   heartColors = heartData.colors;
 
   geometry = new THREE.BufferGeometry();
-  geometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(galaxyPositions.slice(), 3)
-  );
-  geometry.setAttribute(
-    "color",
-    new THREE.BufferAttribute(galaxyColors.slice(), 3)
-  );
+  geometry.setAttribute("position", new THREE.BufferAttribute(galaxyPositions, 3));
+  geometry.setAttribute("color", new THREE.BufferAttribute(galaxyColors, 3));
 
   material = new THREE.PointsMaterial({
     size: parameters.size,
-    sizeAttenuation: true,
-    depthWrite: true,
-    transparent: false,
     vertexColors: true,
-    blending: THREE.NormalBlending,
   });
 
   points = new THREE.Points(geometry, material);
@@ -300,163 +233,27 @@ function initParticles() {
 
 initParticles();
 
-function rebuildSceneForResize() {
-  const oldX = points ? points.position.x : 0;
-
-  if (points) {
-    scene.remove(points);
-    geometry.dispose();
-    material.dispose();
-  }
-
-  responsive = getResponsiveConfig();
-
-  camera.fov = responsive.isMobile ? 72 : 65;
-  camera.aspect = sizes.width / sizes.height;
-  camera.updateProjectionMatrix();
-
-  initParticles();
-  points.position.x = oldX;
-}
-
-window.addEventListener("resize", () => {
-  sizes.width = window.innerWidth;
-  sizes.height = window.innerHeight;
-
-  renderer.setSize(sizes.width, sizes.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-  rebuildSceneForResize();
-
-  setTimeout(placeActionButton, 50);
-});
-
-function updateTyping(deltaTime) {
-  if (!typingStarted || typingFinished) return;
-
-  typingAccumulator += deltaTime;
-
-  while (typingAccumulator >= 1 / typingSpeed) {
-    typingAccumulator -= 1 / typingSpeed;
-
-    if (typingLineIndex >= terminalLines.length) {
-      typingFinished = true;
-      actionButton.classList.add("show");
-      placeActionButton();
-      break;
-    }
-
-    const currentLine = terminalLines[typingLineIndex];
-
-    if (typingCharIndex < currentLine.length) {
-      typingCharIndex++;
-    } else {
-      typingLineIndex++;
-      typingCharIndex = 0;
-    }
-
-    let output = "";
-    for (let i = 0; i < typingLineIndex; i++) {
-      output += terminalLines[i] + "\n";
-    }
-
-    if (typingLineIndex < terminalLines.length) {
-      output += terminalLines[typingLineIndex].slice(0, typingCharIndex);
-    }
-
-    terminalTextEl.textContent = output;
-  }
-}
-
 function tick() {
-  const deltaTime = clock.getDelta();
-  const elapsedTime = clock.elapsedTime;
+  const elapsedTime = clock.getElapsedTime();
 
-  const rawMorphProgress =
-    (elapsedTime - timings.galaxyOnly) / timings.morphDuration;
-  const morphProgress = clamp(rawMorphProgress, 0, 1);
-  const easedMorph = easeInOutQuint(morphProgress);
-  const colorMorph = smoothstep(morphProgress);
+  const positionArray = geometry.attributes.position.array;
+  const t = Math.min(elapsedTime / 4, 1);
 
-  if (!morphFinished) {
-    const positionArray = geometry.attributes.position.array;
-    const colorArray = geometry.attributes.color.array;
-
-    if (elapsedTime < timings.galaxyOnly) {
-      const orbitRadius = responsive.orbitRadius;
-      camera.position.x = Math.cos(elapsedTime * 0.11) * orbitRadius;
-      camera.position.z = Math.sin(elapsedTime * 0.11) * orbitRadius;
-      camera.position.y = responsive.isMobile ? 0.8 : 1.2;
-      camera.lookAt(0, 0, 0);
-    }
-
-    for (let i = 0; i < parameters.count * 3; i++) {
-      positionArray[i] =
-        galaxyPositions[i] * (1 - easedMorph) +
-        heartPositions[i] * easedMorph;
-
-      colorArray[i] =
-        galaxyColors[i] * (1 - colorMorph) +
-        heartColors[i] * colorMorph;
-    }
-
-    geometry.attributes.position.needsUpdate = true;
-    geometry.attributes.color.needsUpdate = true;
-
-    if (morphProgress > 0 && morphProgress < 1) {
-      camera.position.x = THREE.MathUtils.lerp(camera.position.x, 0, 0.02);
-      camera.position.y = THREE.MathUtils.lerp(
-        camera.position.y,
-        responsive.finalCameraY,
-        0.02
-      );
-      camera.position.z = THREE.MathUtils.lerp(
-        camera.position.z,
-        responsive.finalCameraZ,
-        0.02
-      );
-      camera.lookAt(0, 0, 0);
-    }
-
-    if (morphProgress >= 1) {
-      morphFinished = true;
-
-      geometry.setAttribute(
-        "position",
-        new THREE.BufferAttribute(heartPositions.slice(), 3)
-      );
-      geometry.setAttribute(
-        "color",
-        new THREE.BufferAttribute(heartColors.slice(), 3)
-      );
-
-      camera.position.set(0, responsive.finalCameraY, responsive.finalCameraZ);
-      camera.lookAt(0, 0, 0);
-    }
-  } else {
-    const uiTime =
-      elapsedTime -
-      (timings.galaxyOnly + timings.morphDuration + timings.uiStartDelay);
-
-    const uiProgress = clamp(uiTime / timings.uiMoveDuration, 0, 1);
-    const easedUI = easeInOutQuint(uiProgress);
-
-    points.position.x = easedUI * responsive.heartMoveX;
-
-    camera.position.set(0, responsive.finalCameraY, responsive.finalCameraZ);
-    camera.lookAt(points.position.x * (responsive.isMobile ? 0.08 : 0.2), 0, 0);
-
-    if (uiProgress > 0.02) {
-      terminal.classList.add("show");
-      placeActionButton();
-    }
-
-    if (uiProgress > 0.15 && !typingStarted) {
-      typingStarted = true;
-    }
-
-    updateTyping(deltaTime);
+  for (let i = 0; i < parameters.count * 3; i++) {
+    positionArray[i] =
+      galaxyPositions[i] * (1 - t) + heartPositions[i] * t;
   }
+
+  geometry.attributes.position.needsUpdate = true;
+
+  points.position.x = responsive.heartMoveX;
+
+  // 👇 هنا التعديل (يبص في النص على الموبايل)
+  camera.lookAt(
+    points.position.x * (responsive.isMobile ? 0 : 0.2),
+    0,
+    0
+  );
 
   renderer.render(scene, camera);
   requestAnimationFrame(tick);
