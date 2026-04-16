@@ -17,10 +17,10 @@ function getResponsiveConfig() {
     particleSize: isMobile ? 0.027 : 0.022,
     heartScale: isMobile ? 0.075 : 0.088,
     heartDepth: isMobile ? 0.05 : 0.08,
-    cameraY: isMobile ? 0.12 : 0.4,
+    cameraY: isMobile ? 0.18 : 0.4,
     cameraZ: isMobile ? 6.6 : 7.2,
     finalCameraZ: isMobile ? 5.9 : 5.7,
-    finalCameraY: isMobile ? 0.1 : 0.18,
+    finalCameraY: isMobile ? 0.22 : 0.18,
     heartMoveX: isMobile ? 0.78 : 2.15,
     orbitRadius: isMobile ? 6.0 : 7.0,
     fov: isMobile ? 72 : 65,
@@ -122,7 +122,7 @@ const terminalTextEl = document.getElementById("terminalText");
 const terminalLines = [
   "> بصي يا حبيبة يمكن تحسيني غلس",
   "> بس معرفتش ابطل افكر فيكي",
-  '> وبصراحة اللي جوايا لسه مخلصش',
+  "> وبصراحة اللي جوايا لسه مخلصش",
 ];
 
 let typingStarted = false;
@@ -166,12 +166,13 @@ function placeActionButton() {
 
   if (!terminal.classList.contains("show")) return;
 
+  const terminalRect = terminal.getBoundingClientRect();
+  const buttonRect = actionButton.getBoundingClientRect();
+  const buttonWidth = buttonRect.width || 150;
+
   if (isMobile) {
-    const terminalRect = terminal.getBoundingClientRect();
-    const buttonRect = actionButton.getBoundingClientRect();
-    const buttonWidth = buttonRect.width || 150;
     const left = (window.innerWidth - buttonWidth) / 2;
-    const top = Math.max(14, terminalRect.top - 58);
+    const top = Math.max(14, terminalRect.top - 74);
 
     actionButton.style.left = `${left}px`;
     actionButton.style.top = `${top}px`;
@@ -326,7 +327,7 @@ window.addEventListener("resize", () => {
 
   rebuildSceneForResize();
 
-  setTimeout(placeActionButton, 50);
+  setTimeout(placeActionButton, 60);
 });
 
 function updateTyping(deltaTime) {
@@ -384,7 +385,7 @@ function tick() {
       const orbitRadius = responsive.orbitRadius;
       camera.position.x = Math.cos(elapsedTime * 0.11) * orbitRadius;
       camera.position.z = Math.sin(elapsedTime * 0.11) * orbitRadius;
-      camera.position.y = responsive.isMobile ? 0.8 : 1.2;
+      camera.position.y = responsive.isMobile ? 0.95 : 1.2;
       camera.lookAt(0, 0, 0);
     }
 
@@ -440,9 +441,10 @@ function tick() {
     const easedUI = easeInOutQuint(uiProgress);
 
     points.position.x = easedUI * responsive.heartMoveX;
+    points.position.y = responsive.isMobile ? 0.42 : 0;
 
     camera.position.set(0, responsive.finalCameraY, responsive.finalCameraZ);
-    camera.lookAt(points.position.x * (responsive.isMobile ? 0.08 : 0.2), 0, 0);
+    camera.lookAt(points.position.x * (responsive.isMobile ? 0.08 : 0.2), 0.08, 0);
 
     if (uiProgress > 0.02) {
       terminal.classList.add("show");
