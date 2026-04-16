@@ -121,9 +121,9 @@ overlay.appendChild(actionButton);
 const terminalTextEl = document.getElementById("terminalText");
 
 const terminalLines = [
-  "> initializing love.exe",
-  "> galaxy particles synchronized",
-  '> status: "you are my favorite universe"',
+  "> بصي يا حبيبة يمكن تحسيني غلس",
+  "> بس معرفتش ابطل افكر فيكي",
+  '> و بصراحة الي جوايا لسه مخلصش"',
 ];
 
 let typingStarted = false;
